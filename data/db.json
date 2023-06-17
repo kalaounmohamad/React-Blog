@@ -1,0 +1,22 @@
+{
+    "blogs": [
+        { 
+            "title": "1st", 
+            "body": "body 1",
+            "author": "Mohamad",
+            "id": 1 
+        },
+        { 
+            "title": "2nd", 
+            "body": "body 2", 
+            "author": "Ali", 
+            "id": 2 
+        },
+        { 
+            "title": "3rd", 
+            "body": "body 3", 
+            "author": "Kalaoun", 
+            "id": 3 
+        }
+    ]
+}
