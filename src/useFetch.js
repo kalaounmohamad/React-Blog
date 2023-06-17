@@ -6,41 +6,48 @@ const useFetch = (url) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const abortCont = new AbortController();
+
     setTimeout(() => {
-      fetch(url)
+      fetch(url, { signal: abortCont.signal })
         .then((res) => {
           if (!res.ok) {
-            throw Error("Not okayyyyy");
+            // error coming back from server
+            throw Error("could not fetch the data for that resource");
           }
           return res.json();
         })
         .then((data) => {
-          setData(data);
           setIsPending(false);
+          setData(data);
           setError(null);
         })
         .catch((err) => {
-          setIsPending(false);
-          setError(err.message);
+          if (err.name === "AbortError") {
+            console.log("fetch aborted");
+          } else {
+            // auto catches network / connection error
+            setIsPending(false);
+            setError(err.message);
+          }
         });
     }, 1000);
+    // If I want to make a function run
+    // only once at the start on the app I do []
+    // this can avoid an infinite loop
+
+    // useEffect(() => {
+    //   console.log("use effect ran");
+    //   console.log(name);
+    // }, [name]);
+    //the second component is to specify when this
+    // function runs
+
+    // abort the fetch
+    return () => abortCont.abort();
   }, [url]);
-  // If I want to make a function run
-  // only once at the start on the app I do []
-  // this can avoid an infinite loop
 
-  // useEffect(() => {
-  //   console.log("use effect ran");
-  //   console.log(name);
-  // }, [name]);
-  //the second component is to specify when this
-  // function runs
-
-  return {
-    data,
-    isPending,
-    error,
-  };
+  return { data, isPending, error };
 };
 
 export default useFetch;
